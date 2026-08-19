@@ -43,6 +43,8 @@ import java.util.Objects;
  * MockPlugin.
  */
 public class MockPlugin extends AbstractShenyuPlugin {
+
+    private static final int DEFAULT_HTTP_STATUS_CODE = 200;
     
     @Override
     protected Mono<Void> doExecute(final ServerWebExchange exchange, final ShenyuPluginChain chain,
@@ -53,7 +55,8 @@ public class MockPlugin extends AbstractShenyuPlugin {
             return chain.execute(exchange);
         }
         exchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-        exchange.getResponse().setStatusCode(HttpStatus.valueOf(mockHandle.getHttpStatusCode()));
+        int httpStatusCode = Objects.requireNonNullElse(mockHandle.getHttpStatusCode(), DEFAULT_HTTP_STATUS_CODE);
+        exchange.getResponse().setStatusCode(HttpStatus.valueOf(httpStatusCode));
         
         return DataBufferUtils.join(exchange.getRequest().getBody())
                 .switchIfEmpty(Mono.just(DefaultDataBufferFactory.sharedInstance.allocateBuffer(0)))
