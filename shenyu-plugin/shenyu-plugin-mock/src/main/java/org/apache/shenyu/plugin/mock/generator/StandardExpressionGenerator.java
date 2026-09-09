@@ -49,10 +49,10 @@ public class StandardExpressionGenerator implements Generator<String> {
     public String doGenerate(final List<String> params, final String rule, final MockRequest mockRequest) {
         
         String expression = params.get(0);
-
+        
         EvaluationContext context = initContext();
         context.setVariable("req", mockRequest);
-
+        
         Object val = PARSER.parseExpression(expression).getValue(context);
         return JsonUtils.toJson(val);
     }
