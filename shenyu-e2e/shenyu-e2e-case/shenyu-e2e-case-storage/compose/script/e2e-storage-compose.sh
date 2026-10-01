@@ -50,7 +50,7 @@ for storage in "${STORAGE_ARRAY[@]}"; do
     exit 1
   fi
   ## run e2e-test
-  if ! ./mvnw -B -f ./shenyu-e2e/pom.xml -pl shenyu-e2e-case/shenyu-e2e-case-storage -am test; then
+  if ! ./mvnw -B -f ./shenyu-e2e/pom.xml -pl shenyu-e2e-case/shenyu-e2e-case-storage -am test -Dshenyu.e2e.storage.upstream=shenyu-httpbin:80; then
     dump_logs
     exit 1
   fi

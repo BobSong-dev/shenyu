@@ -31,6 +31,8 @@ dump_logs() {
   echo "shenyu-admin log:"
   echo "------------------"
   docker compose -f "$COMPOSE_FILE" logs shenyu-admin || true
+  echo "shenyu-httpbin log:"
+  docker compose -f "$COMPOSE_FILE" logs shenyu-httpbin || true
   echo "shenyu-bootstrap log:"
   echo "------------------"
   docker compose -f "$COMPOSE_FILE" logs shenyu-bootstrap || true
@@ -41,7 +43,7 @@ if ! docker compose -f "$COMPOSE_FILE" up -d --quiet-pull --wait --wait-timeout 
 fi
 ## run e2e-test
 
-if ! ./mvnw -B -f ./shenyu-e2e/pom.xml -pl shenyu-e2e-case/shenyu-e2e-case-storage -am test; then
+if ! ./mvnw -B -f ./shenyu-e2e/pom.xml -pl shenyu-e2e-case/shenyu-e2e-case-storage -am test -Dshenyu.e2e.storage.upstream=shenyu-httpbin:80; then
   dump_logs
   exit 1
 fi
